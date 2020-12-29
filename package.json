@@ -1,0 +1,12 @@
+{
+  "name": "assignment",
+  "version": "1.0.0",
+  "description": "data-store-assignment",
+  "main": "usage.js",
+  "scripts": {
+    "start": "del db.json && node usage.js",
+    "test": ""
+  },
+  "author": "dinesh babu",
+  "license": "ISC"
+}
