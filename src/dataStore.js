@@ -47,39 +47,44 @@ class dataStore {
    * @param {timeToLive} timeToLive is the life span of a key
    */
   create(key, value, timeToLive = null) {
-    let expiresAt;
-    let filePath = this.filePath;
-    let obj = {};
-    if (!this.isWithinLimit(key, value)) {
-      throw new Error("key/value size is not within limit");
-    }
-    if (timeToLive) {
-      expiresAt = new Date().getTime() + timeToLive * 1000;
-    }
-    let val = {
-      value,
-      expiresAt,
-    };
-    obj[key] = val;
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, JSON.stringify(obj), function (err) {
+    try {
+      let expiresAt;
+      let filePath = this.filePath;
+      let obj = {};
+      let valid = this.isWithinLimit(key, value);
+      if (valid !== true) {
+        throw new Error(valid.errorMessage);
+      }
+      if (timeToLive) {
+        expiresAt = new Date().getTime() + timeToLive * 1000;
+      }
+      let val = {
+        value,
+        expiresAt,
+      };
+      obj[key] = val;
+      if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify(obj), function (err) {
+          if (err) throw err;
+        });
+        return;
+      }
+      var stats = fs.statSync(filePath);
+      var fileSizeInBytes = stats.size;
+      if (fileSizeInBytes > fileSizeLimit) {
+        throw new Error("File size limit exceeded.");
+      }
+      let json = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      if (json[key]) {
+        throw new Error("Key already exists");
+      }
+      json[key] = val;
+      fs.writeFileSync(filePath, JSON.stringify(json), function (err) {
         if (err) throw err;
       });
-      return;
+    } catch (err) {
+      console.log(err);
     }
-    var stats = fs.statSync(filePath);
-    var fileSizeInBytes = stats.size;
-    if (fileSizeInBytes > fileSizeLimit) {
-      throw new Error("File size limit exceeded.");
-    }
-    let json = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    if (json[key]) {
-      throw new Error("Key already exists");
-    }
-    json[key] = val;
-    fs.writeFileSync(filePath, JSON.stringify(json), function (err) {
-      if (err) throw err;
-    });
   }
   /**
    * The delete method is used to delete a key from the database
@@ -108,12 +113,12 @@ class dataStore {
   }
   isWithinLimit(key, value) {
     let keySize = key.length;
-    console.log("keySize: ", keySize);
     let valueSize = Buffer.byteLength(JSON.stringify(value)) / 1024;
-    console.log("valueSize: ", valueSize);
 
     if (keySize > 32 || valueSize > 16) {
-      return false;
+      return keySize > 32
+        ? { errorMessage: "Key size is not within limit" }
+        : { errorMessage: "value size is not within limit" };
     } else {
       return true;
     }
