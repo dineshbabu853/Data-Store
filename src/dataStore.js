@@ -27,7 +27,7 @@ class dataStore {
       let json = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
       if (json[key]) {
         //If the provided was expired appropriate error is thrown
-        if (this.isExpired(json[key])) {
+        if (json[key].expiresAt && this.isExpired(json[key])) {
           throw new Error("Oops the key you are trying to access is expired!");
         }
         //return the value as JSON
@@ -50,6 +50,9 @@ class dataStore {
     let expiresAt;
     let filePath = this.filePath;
     let obj = {};
+    if (!this.isWithinLimit(key, value)) {
+      throw new Error("key/value size is not within limit");
+    }
     if (timeToLive) {
       expiresAt = new Date().getTime() + timeToLive * 1000;
     }
@@ -102,6 +105,18 @@ class dataStore {
   isExpired(element) {
     if (!element.expiresAt) return true;
     return new Date().getTime() > element.expiresAt;
+  }
+  isWithinLimit(key, value) {
+    let keySize = key.length;
+    console.log("keySize: ", keySize);
+    let valueSize = Buffer.byteLength(JSON.stringify(value)) / 1024;
+    console.log("valueSize: ", valueSize);
+
+    if (keySize > 32 || valueSize > 16) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 module.exports = dataStore;
