@@ -14,6 +14,8 @@ class dataStore {
     if (fs.existsSync(this.filePath)) {
       throw new Error("The file you are trying to access is already in use!");
     }
+    //create a empty file
+    fs.writeFileSync(this.filePath, JSON.stringify({}));
     //initialize file size limit to 1GB
     this.fileSizeLimit = 1024 * 1024 * 1024;
   }
@@ -33,7 +35,7 @@ class dataStore {
         //return the value as JSON
         return json[key].value;
       } else {
-        throw new Error("Key does not exist");
+        throw new Error(`Key ${key} does not exist`);
       }
     } catch (err) {
       console.log(err);
@@ -50,11 +52,12 @@ class dataStore {
     try {
       let expiresAt;
       let filePath = this.filePath;
-      let obj = {};
+
       let valid = this.isWithinLimit(key, value);
       if (valid !== true) {
         throw new Error(valid.errorMessage);
       }
+
       if (timeToLive) {
         expiresAt = new Date().getTime() + timeToLive * 1000;
       }
@@ -62,16 +65,10 @@ class dataStore {
         value,
         expiresAt,
       };
-      obj[key] = val;
-      if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, JSON.stringify(obj), function (err) {
-          if (err) throw err;
-        });
-        return;
-      }
+
       var stats = fs.statSync(filePath);
       var fileSizeInBytes = stats.size;
-      if (fileSizeInBytes > fileSizeLimit) {
+      if (fileSizeInBytes > this.fileSizeLimit) {
         throw new Error("File size limit exceeded.");
       }
       let json = JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -79,13 +76,13 @@ class dataStore {
         throw new Error("Key already exists");
       }
       json[key] = val;
-      fs.writeFileSync(filePath, JSON.stringify(json), function (err) {
-        if (err) throw err;
-      });
+      fs.writeFileSync(filePath, JSON.stringify(json));
+      console.log(`key ${key} is inserted into data store`);
     } catch (err) {
       console.log(err);
     }
   }
+
   /**
    * The delete method is used to delete a key from the database
    * @param {key} key appropriate key for the data
@@ -98,6 +95,7 @@ class dataStore {
         return;
       }
       delete json[key];
+      console.log(`the key ${key} is deleted`);
       fs.writeFileSync(this.filePath, JSON.stringify(json));
     } catch (err) {
       console.log(err);
@@ -117,11 +115,24 @@ class dataStore {
 
     if (keySize > 32 || valueSize > 16) {
       return keySize > 32
-        ? { errorMessage: "Key size is not within limit" }
-        : { errorMessage: "value size is not within limit" };
+        ? { errorMessage: "Key size is not within limit(32 chars)" }
+        : { errorMessage: "value size is not within limit(16 KB)" };
     } else {
       return true;
     }
   }
 }
-module.exports = dataStore;
+//Singleton class to provide only single instance at a time for client
+class Singleton {
+  constructor() {
+    if (!Singleton.instance) {
+      Singleton.instance = new dataStore();
+    }
+  }
+
+  getInstance() {
+    return Singleton.instance;
+  }
+}
+
+module.exports = Singleton;
