@@ -28,7 +28,7 @@ This takes two arguments *clientId* and *file path(optional)*
 *note:* `clientId` is a four digit number provided by user, it restricts the file access to only one client process at any given time in a computer    
 ```
 let clientId = 2343 //sample clientId     
-let filePath = "D:\\Project\\files"  //sample file path (optional)       
+let filePath = "YourFilePath" (optional)        
 let myDataStore = new dataStore(clientId , filePath)       
 let instance = myDataStore.getInstance()   
 ```
