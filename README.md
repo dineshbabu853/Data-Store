@@ -6,7 +6,7 @@ This is a file based Key value data store built using **node js**
 2. Restricts key size to 32 chars and value size to 16KB   
 3. Allows client to instantiate the class and work on   
 4. File can be created using optional file path , if it is not provided it will be created in current working directory   
-5. Allows only one client to access file at a time   
+5. Allows only one client to access file at any given time in a computer   
 6. Every key will have a optional timeToLive property   
 7. Uses Singleton approach   
 8. Thread safe   
