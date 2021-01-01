@@ -165,6 +165,9 @@ class dataStore {
 //Singleton class to provide only single instance at a time for client
 class Singleton {
   constructor(clientId, path = null) {
+    if (clientId.toString().length != 4) {
+      throw new Error("Please provide a unique four digit clientId");
+    }
     if (!Singleton.instance) {
       Singleton.instance = new dataStore(clientId, path);
     }
