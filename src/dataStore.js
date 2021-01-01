@@ -2,7 +2,7 @@ const fs = require("fs");
 const config = require("./config");
 
 class dataStore {
-  constructor(path = null) {
+  constructor(clientId, path = null) {
     if (path) {
       //If filepath is provided by user
       this.filePath = `${path}\\db.json`;
@@ -12,10 +12,14 @@ class dataStore {
     }
     //throw error if another client tries to access the same file
     if (fs.existsSync(this.filePath)) {
-      throw new Error("The file you are trying to access is already in use!");
+      let json = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+      if (json["clientId"] != clientId)
+        throw new Error(
+          "The file you are trying to access is already in use by another client!"
+        );
     }
     //create a empty file
-    fs.writeFileSync(this.filePath, JSON.stringify({}));
+    fs.writeFileSync(this.filePath, JSON.stringify({ clientId }));
     //initialize file size limit to 1GB
     this.fileSizeLimit = config.fileSizeLimit;
   }
@@ -156,9 +160,9 @@ class dataStore {
 }
 //Singleton class to provide only single instance at a time for client
 class Singleton {
-  constructor(path = null) {
+  constructor(clientId, path = null) {
     if (!Singleton.instance) {
-      Singleton.instance = new dataStore(path);
+      Singleton.instance = new dataStore(clientId, path);
     }
   }
 
