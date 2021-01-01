@@ -5,8 +5,11 @@
   "main": "usage.js",
   "scripts": {
     "start": "del db.json && node client.js",
-    "test": ""
+    "test": "mocha"
   },
   "author": "dinesh babu",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mocha": "^8.2.1"
+  }
 }
