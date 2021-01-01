@@ -22,10 +22,12 @@ This is a file based Key value data store built using **node js**
 let dataStore = require("./src/dataStore")    
 ```
 
-**Creating an instance for the dataStore**   
-note: *Filepath* can be provided as an argument if needed    
+**Creating an instance for the dataStore**    
+This takes two arguments *clientId* and *file path(optional)*    
+*note:* `clientId` is a four digit number provided by user, it restricts the file access to only one client process at any given time in a computer    
 ```
-let myDataStore = new dataStore()   
+let clientId = 2343; //sample clientId
+let myDataStore = new dataStore(clientId);
 let instance = myDataStore.getInstance()   
 ```
 
