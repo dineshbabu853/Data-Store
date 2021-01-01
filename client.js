@@ -1,7 +1,7 @@
 //sample client usage file for using local data Store
 
 //import the dataStore
-let dataStore = require("./src/dataStore");
+let dataStore = require("data-store-local");
 
 //create a object for the data store
 //This takes two arguments clientId and the file path(optional)
