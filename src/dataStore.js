@@ -1,6 +1,4 @@
 const fs = require("fs");
-const runningInstances = [];
-
 class dataStore {
   constructor(path = null) {
     if (path) {
@@ -45,7 +43,7 @@ class dataStore {
   /**
    * The create method is used to add a new key value pair to the database
    * @param {key} key appropriate key for the data
-   * @param {value} value  appropriate key for the data
+   * @param {value} value  appropriate value for the data
    * @param {timeToLive} timeToLive is the life span of a key
    */
   create(key, value, timeToLive = null) {
@@ -109,6 +107,11 @@ class dataStore {
     if (!element.expiresAt) return true;
     return new Date().getTime() > element.expiresAt;
   }
+  /**
+   * The isWithinLimit method is used to check is a key and value size is within limits
+   * @param {key} key appropriate key for the data
+   * @param {value} value  appropriate value for the data
+   */
   isWithinLimit(key, value) {
     let keySize = key.length;
     let valueSize = Buffer.byteLength(JSON.stringify(value)) / 1024;
