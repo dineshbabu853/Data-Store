@@ -1,4 +1,6 @@
 const fs = require("fs");
+const config = require("./config");
+
 class dataStore {
   constructor(path = null) {
     if (path) {
@@ -15,7 +17,7 @@ class dataStore {
     //create a empty file
     fs.writeFileSync(this.filePath, JSON.stringify({}));
     //initialize file size limit to 1GB
-    this.fileSizeLimit = 1024 * 1024 * 1024;
+    this.fileSizeLimit = config.fileSizeLimit;
   }
 
   /**
@@ -26,9 +28,9 @@ class dataStore {
     try {
       let json = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
       if (json[key]) {
-        //If the provided was expired appropriate error is thrown
+        //If the provided key was expired appropriate error is thrown
         if (json[key].expiresAt && this.isExpired(json[key])) {
-          throw new Error("Oops the key you are trying to access is expired!");
+          throw new Error(`Oops! the key ${key} is expired!`);
         }
         //return the value as JSON
         return json[key].value;
@@ -59,7 +61,7 @@ class dataStore {
       if (timeToLive) {
         expiresAt = new Date().getTime() + timeToLive * 1000;
       }
-      let val = {
+      let myValue = {
         value,
         expiresAt,
       };
@@ -73,7 +75,7 @@ class dataStore {
       if (json[key]) {
         throw new Error("Key already exists");
       }
-      json[key] = val;
+      json[key] = myValue;
       fs.writeFileSync(filePath, JSON.stringify(json));
       console.log(`key ${key} is inserted into data store`);
     } catch (err) {
@@ -99,6 +101,31 @@ class dataStore {
       console.log(err);
     }
   }
+
+  update(key, value) {
+    try {
+      let valid = this.isWithinLimit(value);
+      if (valid !== true) {
+        throw new Error(valid.errorMessage);
+      }
+
+      let json = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+      if (json[key]) {
+        if (json[key].expiresAt && this.isExpired(json[key])) {
+          throw new Error(
+            `Oops! the key ${key} is expired you cannot update it!`
+          );
+        }
+        json[key].value = value;
+        fs.writeFileSync(this.filePath, JSON.stringify(json));
+        console.log(`key ${key} is updated`);
+      } else {
+        throw new Error(`Key ${key} does not exist`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   /**
    * The isExpired method is used to check is a key is expired or not
    * @param {element} element is a object containing required data
@@ -112,14 +139,16 @@ class dataStore {
    * @param {key} key appropriate key for the data
    * @param {value} value  appropriate value for the data
    */
-  isWithinLimit(key, value) {
+  isWithinLimit(key = "", value = {}) {
     let keySize = key.length;
     let valueSize = Buffer.byteLength(JSON.stringify(value)) / 1024;
 
-    if (keySize > 32 || valueSize > 16) {
-      return keySize > 32
-        ? { errorMessage: "Key size is not within limit(32 chars)" }
-        : { errorMessage: "value size is not within limit(16 KB)" };
+    if (keySize > config.keySize || valueSize > config.valueSize) {
+      return keySize > config.keySize
+        ? { errorMessage: `Key size is not within limit(32 chars) for ${key}` }
+        : {
+            errorMessage: `value size is not within limit(16 KB) for ${value}`,
+          };
     } else {
       return true;
     }
