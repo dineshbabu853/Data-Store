@@ -127,9 +127,9 @@ class dataStore {
 }
 //Singleton class to provide only single instance at a time for client
 class Singleton {
-  constructor() {
+  constructor(path = null) {
     if (!Singleton.instance) {
-      Singleton.instance = new dataStore();
+      Singleton.instance = new dataStore(path);
     }
   }
 
