@@ -9,7 +9,11 @@ let instance = myDataStore.getInstance();
 
 //create operation using create method
 //It take three arguments : key(string) , value(json) , timeToLive(integer) property in seconds - optional
-instance.create("person1", { age: 22, userId: 2345, city: "chennai" }, 3);
+let key = "person1";
+let value = { age: 22, userId: 2345, city: "chennai" };
+let timeToLive = 3;
+instance.create(key, value, timeToLive);
+
 instance.create("person2", { age: 21, userId: 2346, city: "bangalore" }, 4);
 
 //read operation using get method
