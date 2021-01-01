@@ -1,5 +1,6 @@
 # Key Value Data-Store   
-This is a file based Key value data store built using **node js**
+This is a file based Key value data store built using **node js**    
+Note : This project is published to npm on 01.01.2021       
 
 ## *Core Functionalities*
 1. Supports CREATE , READ , DELETE and UPDATE operation   
@@ -11,7 +12,7 @@ This is a file based Key value data store built using **node js**
 7. Uses Singleton approach   
 8. Thread safe   
 
-## *Steps to run file locally:*
+## *Steps to run this project locally:*
 1. run ```npm i``` to install dependencies   
 2. run ```npm start``` to run the application [ This will run the sample client file provided in the repo ]    
 3. run ```npm test``` to run tests
@@ -19,7 +20,7 @@ This is a file based Key value data store built using **node js**
 ## *Usage*
 **Import the data store**    
 ```
-let dataStore = require("./src/dataStore")    
+let dataStore = require("data-store-local")     
 ```
 
 **Creating an instance for the dataStore**    
