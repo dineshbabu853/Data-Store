@@ -105,7 +105,11 @@ class dataStore {
       console.log(err);
     }
   }
-
+  /**
+   * The update method is used to update value for a given key
+   * @param {key} key appropriate key for the data
+   * @param {value} value  appropriate value for the data
+   */
   update(key, value) {
     try {
       let valid = this.isWithinLimit(value);

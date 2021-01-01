@@ -1,5 +1,5 @@
 # Key Value Data-Store   
-This is file based Key value data store built using **node js**
+This is a file based Key value data store built using **node js**
 
 ## *Core Functionalities*
 1. Supports CREATE , READ , DELETE and UPDATE operation   
@@ -13,7 +13,7 @@ This is file based Key value data store built using **node js**
 
 ## *Steps to run file locally:*
 1. run ```npm i``` to install dependencies   
-2. run ```npm start``` to run the application    
+2. run ```npm start``` to run the application [ This will run the sample client file provided in the repo ]    
 3. run ```npm test``` to run tests
 
 ## *Usage*
@@ -39,7 +39,7 @@ instance.create(key, value, timeToLive);
 
 **Read operation**
 ```
-let myVal = instance.get("person1");    
+let myValue = instance.get("person1");    
 ```
 
 **Delete operation**
