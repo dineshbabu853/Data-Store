@@ -27,6 +27,10 @@ console.log("myVal: ", myVal);
 //delete operation using delete method
 instance.delete("person1");
 
+//update operation using update method
+let newVal = { age: 24, userId: 2345, city: "pune" };
+instance.update("person2", newVal);
+
 //check if the user is trying to access a expired key
 setTimeout(() => {
   instance.get("person2");
