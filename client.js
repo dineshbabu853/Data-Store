@@ -5,8 +5,8 @@ let dataStore = require("./src/dataStore");
 
 //create a object for the data store
 //This takes two arguments clientId and the file path(optional)
-//clientId should be a unique six digit number provided by user
-let clientId = 234312; //sample clientId
+//clientId should be a unique four digit number provided by user
+let clientId = 2343; //sample clientId
 //clientId restricts the access to only one client at any given time in a computer
 let myDataStore = new dataStore(clientId);
 //let myDataStore = new dataStore(clientId , "C:\\Project\\files");
