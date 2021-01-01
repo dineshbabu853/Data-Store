@@ -4,10 +4,12 @@
 let dataStore = require("./src/dataStore");
 
 //create a object for the data store
-//If you wish to create data store in a specific location provide the file path as argument
-//example : let myDataStore2 = new dataStore("D:\\Project\\data");
-//If file path is not provided then default location will be current working directory
-let myDataStore = new dataStore();
+//This takes two arguments clientId and the file path(optional)
+//clientId should be a unique six digit number provided by user
+let clientId = 234312; //sample clientId
+//clientId restricts the access to only one client at any given time in a computer
+let myDataStore = new dataStore(clientId);
+//let myDataStore = new dataStore(clientId , "C:\\Project\\files");
 //get an instance using getInstance method
 let instance = myDataStore.getInstance();
 
