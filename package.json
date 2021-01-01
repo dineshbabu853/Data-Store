@@ -2,7 +2,7 @@
   "name": "data-store",
   "version": "1.0.0",
   "description": "data-store-assignment",
-  "main": "usage.js",
+  "main": "client.js",
   "scripts": {
     "start": "del db.json && node client.js",
     "test": "mocha"
