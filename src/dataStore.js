@@ -15,7 +15,7 @@ class dataStore {
       let json = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
       if (json["clientId"] != clientId)
         throw new Error(
-          "The file you are trying to access is already in use by another client!"
+          "The file you are trying to access is already in use by another client process!"
         );
     }
     //create a empty file
