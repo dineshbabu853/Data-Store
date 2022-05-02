@@ -1,4 +1,4 @@
-## Key Value Data-Store Assignment
+## Key Value Data-Store
 This is a file based Key value data store built using **node js**    
 Note : This project is published to npm on 01.01.2021 please refer [this](https://www.npmjs.com/package/data-store-local) for more details     
 
